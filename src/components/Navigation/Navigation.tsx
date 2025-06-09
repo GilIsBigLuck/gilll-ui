@@ -7,7 +7,7 @@ export type NavigationPosition = "top" | "bottom" | "left" | "right";
 // Navigation Item Type
 export interface NavigationItem {
   id: string;
-  label: string;
+  label?: string;
   icon?: React.ReactNode;
   onClick?: () => void;
   isActive?: boolean;
@@ -53,7 +53,8 @@ const NavigationDot = styled.div<{
   transform: translate(-50%, -50%)
     scale(${({ isActive }) => (isActive ? 1 : 0.8)});
   border-radius: 50%;
-  background-color: ${({ activeColor }) => activeColor || "#1976d2"};
+  background-color: ${({ activeColor }) =>
+    activeColor || "var(--gilll-primary)"};
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: ${({ isActive }) => (isActive ? 1 : 0)};
   z-index: 0;
@@ -74,7 +75,7 @@ const NavigationItemButton = styled.button<{
   border: none;
   background: none;
   cursor: pointer;
-  color: ${({ isActive }) => (isActive ? "#ffffff" : "inherit")};
+  color: ${({ isActive }) => (isActive ? "var(--gilll-text)" : "inherit")};
   transition: all 0.3s ease;
   z-index: 1;
   overflow: hidden;
@@ -89,7 +90,8 @@ const NavigationItemButton = styled.button<{
   svg {
     width: 24px;
     height: 24px;
-    color: ${({ isActive, activeColor }) => (isActive ? "#ffffff" : "#97a0a5")};
+    color: ${({ isActive, activeColor }) =>
+      isActive ? "var(--gilll-text)" : "var(--gilll-text-secondary)"};
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     transform: scale(${({ isActive }) => (isActive ? 1.1 : 1)});
   }
@@ -97,7 +99,7 @@ const NavigationItemButton = styled.button<{
   &:hover {
     svg {
       color: ${({ isActive, activeColor }) =>
-        isActive ? "#ffffff" : activeColor || "#1976d2"};
+        isActive ? "var(--gilll-text)" : activeColor || "var(--gilll-primary)"};
     }
   }
 `;
@@ -108,9 +110,10 @@ const NavigationContainer = styled.div<Omit<NavigationProps, "items">>`
   gap: 32px;
   margin: 0 auto;
   border-radius: 50px;
-  box-shadow: 0 0 20px rgba(34, 34, 34, 0.1);
+  box-shadow: 0 0 20px var(--gilll-shadow);
   padding: 0 24px;
-  background-color: ${({ backgroundColor }) => backgroundColor || "#1976d2"};
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor || "var(--gilll-primary)"};
   width: ${({ position, width }) =>
     position === "left" || position === "right"
       ? width || "240px"
