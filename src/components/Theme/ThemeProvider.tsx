@@ -13,6 +13,14 @@ export interface Theme {
   shadow: string;
 }
 
+// 색상을 RGBA로 변환하는 함수
+const hexToRgba = (hex: string, alpha: number): string => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
+
 // 기본 라이트 테마
 const defaultLightTheme: Theme = {
   primary: "#1976d2",
@@ -22,7 +30,7 @@ const defaultLightTheme: Theme = {
   text: "#333333",
   textSecondary: "#666666",
   border: "#e0e0e0",
-  shadow: "rgba(0, 0, 0, 0.1)",
+  shadow: "0 0 20px 0 rgba(25, 118, 210, 0.1)", // primary color의 10% opacity
 };
 
 // 기본 다크 테마
@@ -34,7 +42,7 @@ const defaultDarkTheme: Theme = {
   text: "#ffffff",
   textSecondary: "#cccccc",
   border: "#333333",
-  shadow: "rgba(0, 0, 0, 0.3)",
+  shadow: "0 0 20px 0 rgba(100, 181, 246, 0.1)", // primary color의 10% opacity
 };
 
 // Theme Context
@@ -103,9 +111,20 @@ export const GilllThemeProvider: React.FC<GilllThemeProviderProps> = ({
 
   // 테마 생성 (기본 + 커스텀 + 다크모드)
   const baseTheme = actualIsDark ? defaultDarkTheme : defaultLightTheme;
+
+  // 커스텀 테마가 primary color를 포함하면 shadow도 자동 계산
+  const customThemeWithShadow = customTheme.primary
+    ? {
+        ...customTheme,
+        shadow:
+          customTheme.shadow ||
+          `0 0 20px 0 ${hexToRgba(customTheme.primary, 0.1)}`,
+      }
+    : customTheme;
+
   const theme: Theme = {
     ...baseTheme,
-    ...customTheme,
+    ...customThemeWithShadow,
   };
 
   const toggleDarkMode = () => {

@@ -49,10 +49,12 @@ const StyledBox = styled.div<BoxProps>`
   margin-left: ${({ marginLeft }) => marginLeft};
   width: ${({ width }) => width};
   height: ${({ height }) => height};
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  background-color: ${({ backgroundColor = "white" }) => backgroundColor};
   border-radius: ${({ borderRadius }) => borderRadius};
   border: ${({ border }) => border};
-  box-shadow: ${({ boxShadow }) => boxShadow};
+  box-shadow: ${({
+    boxShadow = "var(--gilll-shadow, 0 2px 8px rgba(0, 0, 0, 0.1))",
+  }) => boxShadow};
   // Grid properties
   grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns};
   grid-template-rows: ${({ gridTemplateRows }) => gridTemplateRows};

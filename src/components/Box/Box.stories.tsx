@@ -1,11 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Box } from "./Box";
 import { Typography } from "../Typography";
+import { GilllThemeProvider } from "../Theme/ThemeProvider";
 
 const meta: Meta<typeof Box> = {
   title: "Gilll/Box",
   component: Box,
   tags: ["autodocs"],
+  decorators: [
+    (Story) => (
+      <GilllThemeProvider>
+        <Story />
+      </GilllThemeProvider>
+    ),
+  ],
   argTypes: {
     display: {
       control: "select",
@@ -82,9 +90,18 @@ type Story = StoryObj<typeof Box>;
 export const Basic: Story = {
   args: {
     padding: "16px",
-    backgroundColor: "#f5f5f5",
     borderRadius: "4px",
+    margin: "20px",
     children: "Basic Box",
+  },
+};
+
+export const WithDefaultShadow: Story = {
+  args: {
+    padding: "24px",
+    borderRadius: "8px",
+    margin: "20px",
+    children: "Box with Default Shadow",
   },
 };
 
@@ -93,8 +110,8 @@ export const FlexBox: Story = {
     display: "flex",
     gap: "16px",
     padding: "16px",
-    backgroundColor: "#f5f5f5",
     borderRadius: "4px",
+    margin: "20px",
     children: (
       <>
         <Box padding="8px" backgroundColor="#e0e0e0" borderRadius="4px">
@@ -117,8 +134,8 @@ export const GridBox: Story = {
     gridTemplateColumns: "repeat(3, 1fr)",
     gap: "16px",
     padding: "16px",
-    backgroundColor: "#f5f5f5",
     borderRadius: "4px",
+    margin: "20px",
     children: (
       <>
         <Box padding="8px" backgroundColor="#e0e0e0" borderRadius="4px">
@@ -138,9 +155,8 @@ export const GridBox: Story = {
 export const WithTypography: Story = {
   args: {
     padding: "24px",
-    backgroundColor: "#ffffff",
     borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    margin: "20px",
     children: (
       <>
         <Typography variant="h4" marginBottom="16px">
