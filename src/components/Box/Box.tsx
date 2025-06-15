@@ -30,10 +30,35 @@ export interface BoxProps {
   gridTemplateRows?: string;
   gridColumn?: string;
   gridRow?: string;
+  // Loading state
+  loading?: boolean;
+  loadingSpinnerColor?: string;
+  // Disabled state
+  disabled?: boolean;
   children?: React.ReactNode;
   className?: string;
   onClick?: () => void;
 }
+
+// Loading Spinner Component
+const Spinner = styled.div<{ color: string }>`
+  width: 24px;
+  height: 24px;
+  border: 3px solid transparent;
+  border-top: 3px solid ${({ color }) => color};
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
 
 const StyledBox = styled.div<BoxProps>`
   display: ${({ display = "block" }) => display};
@@ -60,10 +85,40 @@ const StyledBox = styled.div<BoxProps>`
   grid-template-rows: ${({ gridTemplateRows }) => gridTemplateRows};
   grid-column: ${({ gridColumn }) => gridColumn};
   grid-row: ${({ gridRow }) => gridRow};
+  // Loading state
+  position: ${({ loading }) => (loading ? "relative" : "static")};
+  // Disabled state
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
+  cursor: ${({ disabled, onClick }) =>
+    disabled ? "not-allowed" : onClick ? "pointer" : "default"};
+  user-select: ${({ disabled }) => (disabled ? "none" : "auto")};
 `;
 
-export const Box: React.FC<BoxProps> = ({ children, ...props }) => {
-  return <StyledBox {...props}>{children}</StyledBox>;
+export const Box: React.FC<BoxProps> = ({
+  children,
+  loading = false,
+  loadingSpinnerColor = "#1976d2",
+  disabled = false,
+  onClick,
+  ...props
+}) => {
+  const handleClick = () => {
+    if (!disabled && !loading && onClick) {
+      onClick();
+    }
+  };
+
+  return (
+    <StyledBox
+      loading={loading}
+      disabled={disabled}
+      onClick={handleClick}
+      {...props}
+    >
+      {loading ? <Spinner color={loadingSpinnerColor} /> : children}
+    </StyledBox>
+  );
 };
 
 export default Box;
