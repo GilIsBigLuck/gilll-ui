@@ -1,4 +1,6 @@
 import React from 'react';
+import * as _emotion_react_jsx_runtime from '@emotion/react/jsx-runtime';
+import * as react_jsx_runtime from 'react/jsx-runtime';
 
 interface Theme {
     primary: string;
@@ -77,5 +79,72 @@ interface RadioGroupProps {
 }
 declare const RadioGroup: React.FC<RadioGroupProps>;
 
-export { Checkbox, DarkModeToggle, GilllThemeProvider, Navigation, Radio, RadioGroup, useTheme };
-export type { CheckboxProps, NavigationItem, NavigationPosition, NavigationProps, RadioGroupProps, RadioProps, Theme };
+type ContainerMaxWidth = "xs" | "sm" | "md" | "lg" | "xl";
+interface ContainerProps {
+    maxWidth?: ContainerMaxWidth;
+    padding?: string;
+    margin?: string;
+    children?: React.ReactNode;
+    className?: string;
+}
+declare const Container: React.FC<ContainerProps>;
+
+interface BoxProps {
+    display?: "block" | "flex" | "inline" | "inline-block" | "grid" | "none";
+    flexDirection?: "row" | "column" | "row-reverse" | "column-reverse";
+    justifyContent?: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly";
+    alignItems?: "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
+    gap?: string;
+    padding?: string;
+    margin?: string;
+    marginTop?: string;
+    marginRight?: string;
+    marginBottom?: string;
+    marginLeft?: string;
+    width?: string;
+    height?: string;
+    backgroundColor?: string;
+    borderRadius?: string;
+    border?: string;
+    boxShadow?: string;
+    gridTemplateColumns?: string;
+    gridTemplateRows?: string;
+    gridColumn?: string;
+    gridRow?: string;
+    loading?: boolean;
+    loadingSpinnerColor?: string;
+    disabled?: boolean;
+    children?: React.ReactNode;
+    className?: string;
+    onClick?: () => void;
+}
+declare const Box: React.FC<BoxProps>;
+
+type TypographyVariant = "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2" | "subtitle3" | "body1" | "body2" | "body3";
+interface TypographyProps {
+    variant?: TypographyVariant;
+    color?: string;
+    align?: "left" | "center" | "right";
+    children: React.ReactNode;
+    className?: string;
+    style?: React.CSSProperties;
+    marginBottom?: string;
+}
+declare const Typography: React.FC<TypographyProps>;
+
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    label?: string;
+}
+declare const Input: ({ label, ...props }: InputProps) => _emotion_react_jsx_runtime.JSX.Element;
+
+interface ButtonProps {
+    primary?: boolean;
+    backgroundColor?: string;
+    size?: "small" | "medium" | "large";
+    label: string;
+    onClick?: () => void;
+}
+declare const Button: ({ primary, size, backgroundColor, label, ...props }: ButtonProps) => react_jsx_runtime.JSX.Element;
+
+export { Box, Button, Checkbox, Container, DarkModeToggle, GilllThemeProvider, Input, Navigation, Radio, RadioGroup, Typography, useTheme };
+export type { BoxProps, ButtonProps, CheckboxProps, ContainerMaxWidth, ContainerProps, InputProps, NavigationItem, NavigationPosition, NavigationProps, RadioGroupProps, RadioProps, Theme, TypographyProps, TypographyVariant };

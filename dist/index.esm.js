@@ -1,4 +1,5 @@
-import { jsxs, jsx } from 'react/jsx-runtime';
+import * as ReactJSXRuntime from 'react/jsx-runtime';
+import { jsxs as jsxs$1, jsx as jsx$1 } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { forwardRef, useContext, createContext, useState, useEffect, useRef } from 'react';
 
@@ -2040,6 +2041,97 @@ if (!isBrowser$1) {
 
 var ThemeContext$1 = /* #__PURE__ */React.createContext({});
 
+var hasOwn = {}.hasOwnProperty;
+
+var typePropName = '__EMOTION_TYPE_PLEASE_DO_NOT_USE__';
+var createEmotionProps = function createEmotionProps(type, props) {
+
+  var newProps = {};
+
+  for (var _key in props) {
+    if (hasOwn.call(props, _key)) {
+      newProps[_key] = props[_key];
+    }
+  }
+
+  newProps[typePropName] = type; // Runtime labeling is an opt-in feature because:
+
+  return newProps;
+};
+
+var Insertion$1 = function Insertion(_ref) {
+  var cache = _ref.cache,
+      serialized = _ref.serialized,
+      isStringTag = _ref.isStringTag;
+  registerStyles(cache, serialized, isStringTag);
+  var rules = useInsertionEffectAlwaysWithSyncFallback(function () {
+    return insertStyles(cache, serialized, isStringTag);
+  });
+
+  if (!isBrowser$1 && rules !== undefined) {
+    var _ref2;
+
+    var serializedNames = serialized.name;
+    var next = serialized.next;
+
+    while (next !== undefined) {
+      serializedNames += ' ' + next.name;
+      next = next.next;
+    }
+
+    return /*#__PURE__*/React.createElement("style", (_ref2 = {}, _ref2["data-emotion"] = cache.key + " " + serializedNames, _ref2.dangerouslySetInnerHTML = {
+      __html: rules
+    }, _ref2.nonce = cache.sheet.nonce, _ref2));
+  }
+
+  return null;
+};
+
+var Emotion = /* #__PURE__ */withEmotionCache(function (props, cache, ref) {
+  var cssProp = props.css; // so that using `css` from `emotion` and passing the result to the css prop works
+  // not passing the registered cache to serializeStyles because it would
+  // make certain babel optimisations not possible
+
+  if (typeof cssProp === 'string' && cache.registered[cssProp] !== undefined) {
+    cssProp = cache.registered[cssProp];
+  }
+
+  var WrappedComponent = props[typePropName];
+  var registeredStyles = [cssProp];
+  var className = '';
+
+  if (typeof props.className === 'string') {
+    className = getRegisteredStyles(cache.registered, registeredStyles, props.className);
+  } else if (props.className != null) {
+    className = props.className + " ";
+  }
+
+  var serialized = serializeStyles(registeredStyles, undefined, React.useContext(ThemeContext$1));
+
+  className += cache.key + "-" + serialized.name;
+  var newProps = {};
+
+  for (var _key2 in props) {
+    if (hasOwn.call(props, _key2) && _key2 !== 'css' && _key2 !== typePropName && (true )) {
+      newProps[_key2] = props[_key2];
+    }
+  }
+
+  newProps.className = className;
+
+  if (ref) {
+    newProps.ref = ref;
+  }
+
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Insertion$1, {
+    cache: cache,
+    serialized: serialized,
+    isStringTag: typeof WrappedComponent === 'string'
+  }), /*#__PURE__*/React.createElement(WrappedComponent, newProps));
+});
+
+var Emotion$1 = Emotion;
+
 // eslint-disable-next-line no-undef
 var reactPropsRegex = /^((children|dangerouslySetInnerHTML|key|ref|autoFocus|defaultValue|defaultChecked|innerHTML|suppressContentEditableWarning|suppressHydrationWarning|valueLink|abbr|accept|acceptCharset|accessKey|action|allow|allowUserMedia|allowPaymentRequest|allowFullScreen|allowTransparency|alt|async|autoComplete|autoPlay|capture|cellPadding|cellSpacing|challenge|charSet|checked|cite|classID|className|cols|colSpan|content|contentEditable|contextMenu|controls|controlsList|coords|crossOrigin|data|dateTime|decoding|default|defer|dir|disabled|disablePictureInPicture|disableRemotePlayback|download|draggable|encType|enterKeyHint|fetchpriority|fetchPriority|form|formAction|formEncType|formMethod|formNoValidate|formTarget|frameBorder|headers|height|hidden|high|href|hrefLang|htmlFor|httpEquiv|id|inputMode|integrity|is|keyParams|keyType|kind|label|lang|list|loading|loop|low|marginHeight|marginWidth|max|maxLength|media|mediaGroup|method|min|minLength|multiple|muted|name|nonce|noValidate|open|optimum|pattern|placeholder|playsInline|poster|preload|profile|radioGroup|readOnly|referrerPolicy|rel|required|reversed|role|rows|rowSpan|sandbox|scope|scoped|scrolling|seamless|selected|shape|size|sizes|slot|span|spellCheck|src|srcDoc|srcLang|srcSet|start|step|style|summary|tabIndex|target|title|translate|type|useMap|value|width|wmode|wrap|about|datatype|inlist|prefix|property|resource|typeof|vocab|autoCapitalize|autoCorrect|autoSave|color|incremental|fallback|inert|itemProp|itemScope|itemType|itemID|itemRef|on|option|results|security|unselectable|accentHeight|accumulate|additive|alignmentBaseline|allowReorder|alphabetic|amplitude|arabicForm|ascent|attributeName|attributeType|autoReverse|azimuth|baseFrequency|baselineShift|baseProfile|bbox|begin|bias|by|calcMode|capHeight|clip|clipPathUnits|clipPath|clipRule|colorInterpolation|colorInterpolationFilters|colorProfile|colorRendering|contentScriptType|contentStyleType|cursor|cx|cy|d|decelerate|descent|diffuseConstant|direction|display|divisor|dominantBaseline|dur|dx|dy|edgeMode|elevation|enableBackground|end|exponent|externalResourcesRequired|fill|fillOpacity|fillRule|filter|filterRes|filterUnits|floodColor|floodOpacity|focusable|fontFamily|fontSize|fontSizeAdjust|fontStretch|fontStyle|fontVariant|fontWeight|format|from|fr|fx|fy|g1|g2|glyphName|glyphOrientationHorizontal|glyphOrientationVertical|glyphRef|gradientTransform|gradientUnits|hanging|horizAdvX|horizOriginX|ideographic|imageRendering|in|in2|intercept|k|k1|k2|k3|k4|kernelMatrix|kernelUnitLength|kerning|keyPoints|keySplines|keyTimes|lengthAdjust|letterSpacing|lightingColor|limitingConeAngle|local|markerEnd|markerMid|markerStart|markerHeight|markerUnits|markerWidth|mask|maskContentUnits|maskUnits|mathematical|mode|numOctaves|offset|opacity|operator|order|orient|orientation|origin|overflow|overlinePosition|overlineThickness|panose1|paintOrder|pathLength|patternContentUnits|patternTransform|patternUnits|pointerEvents|points|pointsAtX|pointsAtY|pointsAtZ|preserveAlpha|preserveAspectRatio|primitiveUnits|r|radius|refX|refY|renderingIntent|repeatCount|repeatDur|requiredExtensions|requiredFeatures|restart|result|rotate|rx|ry|scale|seed|shapeRendering|slope|spacing|specularConstant|specularExponent|speed|spreadMethod|startOffset|stdDeviation|stemh|stemv|stitchTiles|stopColor|stopOpacity|strikethroughPosition|strikethroughThickness|string|stroke|strokeDasharray|strokeDashoffset|strokeLinecap|strokeLinejoin|strokeMiterlimit|strokeOpacity|strokeWidth|surfaceScale|systemLanguage|tableValues|targetX|targetY|textAnchor|textDecoration|textRendering|textLength|to|transform|u1|u2|underlinePosition|underlineThickness|unicode|unicodeBidi|unicodeRange|unitsPerEm|vAlphabetic|vHanging|vIdeographic|vMathematical|values|vectorEffect|version|vertAdvY|vertOriginX|vertOriginY|viewBox|viewTarget|visibility|widths|wordSpacing|writingMode|x|xHeight|x1|x2|xChannelSelector|xlinkActuate|xlinkArcrole|xlinkHref|xlinkRole|xlinkShow|xlinkTitle|xlinkType|xmlBase|xmlns|xmlnsXlink|xmlLang|xmlSpace|y|y1|y2|yChannelSelector|z|zoomAndPan|for|class|autofocus)|(([Dd][Aa][Tt][Aa]|[Aa][Rr][Ii][Aa]|x)-.*))$/; // https://esbench.com/bench/5bfee68a4cd7e6009ef61d23
 
@@ -2321,8 +2413,8 @@ const GilllThemeProvider = ({
     toggleDarkMode,
     setTheme
   };
-  return /* @__PURE__ */ jsxs(ThemeContext.Provider, { value: contextValue, children: [
-    /* @__PURE__ */ jsx(GlobalStyles, { theme }),
+  return /* @__PURE__ */ jsxs$1(ThemeContext.Provider, { value: contextValue, children: [
+    /* @__PURE__ */ jsx$1(GlobalStyles, { theme }),
     children
   ] });
 };
@@ -2335,7 +2427,7 @@ const useTheme = () => {
 };
 const DarkModeToggle = () => {
   const { isDark, toggleDarkMode } = useTheme();
-  return /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsx$1(
     "button",
     {
       onClick: toggleDarkMode,
@@ -2463,7 +2555,7 @@ const Navigation = ({
     setActiveIndex(index);
     onClick?.();
   };
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsxs$1(
     NavigationContainer,
     {
       position,
@@ -2472,7 +2564,7 @@ const Navigation = ({
       width,
       height,
       children: [
-        items.map((item, index) => /* @__PURE__ */ jsxs(
+        items.map((item, index) => /* @__PURE__ */ jsxs$1(
           NavigationItemButton,
           {
             ref: (el) => {
@@ -2483,12 +2575,12 @@ const Navigation = ({
             activeColor,
             children: [
               item.icon,
-              item.label && /* @__PURE__ */ jsx("span", { className: "label", children: item.label })
+              item.label && /* @__PURE__ */ jsx$1("span", { className: "label", children: item.label })
             ]
           },
           item.id
         )),
-        /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsx$1(
           NavigationDot,
           {
             top: dotPos.top,
@@ -2597,8 +2689,8 @@ const Checkbox = ({
       onChange(event.target.checked);
     }
   };
-  return /* @__PURE__ */ jsxs(CheckboxContainer, { disabled, className, children: [
-    /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs$1(CheckboxContainer, { disabled, className, children: [
+    /* @__PURE__ */ jsx$1(
       CheckboxInput,
       {
         type: "checkbox",
@@ -2607,8 +2699,8 @@ const Checkbox = ({
         disabled
       }
     ),
-    /* @__PURE__ */ jsx(CheckboxBox, { checked, size, disabled }),
-    label && /* @__PURE__ */ jsx(CheckboxLabel, { size, children: label })
+    /* @__PURE__ */ jsx$1(CheckboxBox, { checked, size, disabled }),
+    label && /* @__PURE__ */ jsx$1(CheckboxLabel, { size, children: label })
   ] });
 };
 
@@ -2723,8 +2815,8 @@ const Radio = ({
       onChange(event.target.checked);
     }
   };
-  return /* @__PURE__ */ jsxs(RadioContainer, { disabled, className, children: [
-    /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs$1(RadioContainer, { disabled, className, children: [
+    /* @__PURE__ */ jsx$1(
       RadioInput,
       {
         type: "radio",
@@ -2735,8 +2827,8 @@ const Radio = ({
         value
       }
     ),
-    /* @__PURE__ */ jsx(RadioBox, { checked, size, disabled }),
-    label && /* @__PURE__ */ jsx(RadioLabel, { size, children: label })
+    /* @__PURE__ */ jsx$1(RadioBox, { checked, size, disabled }),
+    label && /* @__PURE__ */ jsx$1(RadioLabel, { size, children: label })
   ] });
 };
 const RadioGroupContainer = newStyled.div`
@@ -2772,8 +2864,311 @@ const RadioGroup = ({
     }
     return child;
   });
-  return /* @__PURE__ */ jsx(RadioGroupContainer, { className, children: childrenWithProps });
+  return /* @__PURE__ */ jsx$1(RadioGroupContainer, { className, children: childrenWithProps });
 };
 
-export { Checkbox, DarkModeToggle, GilllThemeProvider, Navigation, Radio, RadioGroup, useTheme };
+const getMaxWidth = (maxWidth) => {
+  switch (maxWidth) {
+    case "xs":
+      return "444px";
+    case "sm":
+      return "600px";
+    case "md":
+      return "900px";
+    case "lg":
+      return "1200px";
+    case "xl":
+      return "1536px";
+    default:
+      return "1200px";
+  }
+};
+const StyledContainer = newStyled.div`
+  width: 100%;
+  max-width: ${({ maxWidth = "lg" }) => getMaxWidth(maxWidth)};
+  margin-left: auto;
+  margin-right: auto;
+  padding: ${({ padding = "0 16px" }) => padding};
+  margin: ${({ margin }) => margin};
+  box-sizing: border-box;
+`;
+const Container = ({ children, ...props }) => {
+  return /* @__PURE__ */ jsx$1(StyledContainer, { ...props, children });
+};
+
+const Spinner = newStyled.div`
+  width: 24px;
+  height: 24px;
+  border: 3px solid transparent;
+  border-top: 3px solid ${({ color }) => color};
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+const StyledBox = newStyled.div`
+  display: ${({ display = "block" }) => display};
+  flex-direction: ${({ flexDirection }) => flexDirection};
+  justify-content: ${({ justifyContent }) => justifyContent};
+  align-items: ${({ alignItems }) => alignItems};
+  gap: ${({ gap }) => gap};
+  padding: ${({ padding }) => padding};
+  margin: ${({ margin }) => margin};
+  margin-top: ${({ marginTop }) => marginTop};
+  margin-right: ${({ marginRight }) => marginRight};
+  margin-bottom: ${({ marginBottom }) => marginBottom};
+  margin-left: ${({ marginLeft }) => marginLeft};
+  width: ${({ width }) => width};
+  height: ${({ height }) => height};
+  background-color: ${({ backgroundColor = "white" }) => backgroundColor};
+  border-radius: ${({ borderRadius }) => borderRadius};
+  border: ${({ border }) => border};
+  box-shadow: ${({
+  boxShadow = "var(--gilll-shadow, 0 2px 8px rgba(0, 0, 0, 0.1))"
+}) => boxShadow};
+  // Grid properties
+  grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns};
+  grid-template-rows: ${({ gridTemplateRows }) => gridTemplateRows};
+  grid-column: ${({ gridColumn }) => gridColumn};
+  grid-row: ${({ gridRow }) => gridRow};
+  // Loading state
+  position: ${({ loading }) => loading ? "relative" : "static"};
+  // Disabled state
+  opacity: ${({ disabled }) => disabled ? 0.6 : 1};
+  pointer-events: ${({ disabled }) => disabled ? "none" : "auto"};
+  cursor: ${({ disabled, onClick }) => disabled ? "not-allowed" : onClick ? "pointer" : "default"};
+  user-select: ${({ disabled }) => disabled ? "none" : "auto"};
+`;
+const Box = ({
+  children,
+  loading = false,
+  loadingSpinnerColor = "#1976d2",
+  disabled = false,
+  onClick,
+  ...props
+}) => {
+  const handleClick = () => {
+    if (!disabled && !loading && onClick) {
+      onClick();
+    }
+  };
+  return /* @__PURE__ */ jsx$1(
+    StyledBox,
+    {
+      loading,
+      disabled,
+      onClick: handleClick,
+      ...props,
+      children: loading ? /* @__PURE__ */ jsx$1(Spinner, { color: loadingSpinnerColor }) : children
+    }
+  );
+};
+
+const getTypographyStyles = (variant) => {
+  switch (variant) {
+    case "h1":
+      return `
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+      `;
+    case "h2":
+      return `
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 0.875rem;
+      `;
+    case "h3":
+      return `
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+      `;
+    case "h4":
+      return `
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 0.75rem;
+      `;
+    case "h5":
+      return `
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 0.625rem;
+      `;
+    case "h6":
+      return `
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 0.5rem;
+      `;
+    case "subtitle1":
+      return `
+        font-size: 1.125rem;
+        font-weight: 500;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+      `;
+    case "subtitle2":
+      return `
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+      `;
+    case "subtitle3":
+      return `
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.5;
+        margin-bottom: 0.375rem;
+      `;
+    case "body1":
+      return `
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+      `;
+    case "body2":
+      return `
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        margin-bottom: 0.375rem;
+      `;
+    case "body3":
+      return `
+        font-size: 0.75rem;
+        font-weight: 400;
+        line-height: 1.5;
+        margin-bottom: 0.25rem;
+      `;
+    default:
+      return `
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+      `;
+  }
+};
+const getElement = (variant) => {
+  if (variant.startsWith("h")) {
+    return variant;
+  }
+  if (variant.startsWith("subtitle")) {
+    return "h6";
+  }
+  return "p";
+};
+const StyledTypography = newStyled.div`
+  margin: 0;
+  padding: 0;
+  color: ${({ color }) => color || "inherit"};
+  text-align: ${({ align }) => align || "left"};
+  margin-bottom: ${({ marginBottom }) => marginBottom || "0"};
+
+  ${({ variant = "body1" }) => getTypographyStyles(variant)}
+`;
+const Typography = ({
+  variant = "body1",
+  children,
+  ...props
+}) => {
+  const Component = getElement(variant);
+  return /* @__PURE__ */ jsx$1(StyledTypography, { as: Component, variant, ...props, children });
+};
+
+var jsx = function jsx(type, props, key) {
+  if (!hasOwn.call(props, 'css')) {
+    return ReactJSXRuntime.jsx(type, props, key);
+  }
+
+  return ReactJSXRuntime.jsx(Emotion$1, createEmotionProps(type, props), key);
+};
+var jsxs = function jsxs(type, props, key) {
+  if (!hasOwn.call(props, 'css')) {
+    return ReactJSXRuntime.jsxs(type, props, key);
+  }
+
+  return ReactJSXRuntime.jsxs(Emotion$1, createEmotionProps(type, props), key);
+};
+
+const Wrapper = newStyled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+const StyledInput = newStyled.input`
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+
+  &:focus {
+    outline: 2px solid black;
+    outline-offset: 2px;
+  }
+`;
+const Input = ({ label, ...props }) => /* @__PURE__ */ jsxs(Wrapper, { children: [
+  label && /* @__PURE__ */ jsx("label", { htmlFor: props.id, children: label }),
+  /* @__PURE__ */ jsx(StyledInput, { id: props.id, ...props })
+] });
+
+const sizeMap = {
+  small: { fontSize: "12px", padding: "8px 16px" },
+  medium: { fontSize: "14px", padding: "10px 20px" },
+  large: { fontSize: "16px", padding: "12px 24px" }
+};
+const StyledButton = newStyled.button(({ primary, size, backgroundColor }) => ({
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer",
+  fontWeight: 600,
+  transition: "0.2s",
+  ...primary ? { backgroundColor: backgroundColor || "#1ea7fd", color: "#fff" } : {
+    backgroundColor: backgroundColor || "#fff",
+    color: "#333",
+    border: "1px solid #ddd"
+  },
+  ...sizeMap[size],
+  "&:focus": {
+    outline: "2px solid black",
+    outlineOffset: "2px"
+  }
+}));
+const Button = ({
+  primary = false,
+  size = "medium",
+  backgroundColor,
+  label,
+  ...props
+}) => {
+  return /* @__PURE__ */ jsx$1(
+    StyledButton,
+    {
+      primary,
+      size,
+      backgroundColor,
+      ...props,
+      children: label
+    }
+  );
+};
+
+export { Box, Button, Checkbox, Container, DarkModeToggle, GilllThemeProvider, Input, Navigation, Radio, RadioGroup, Typography, useTheme };
 //# sourceMappingURL=index.esm.js.map
